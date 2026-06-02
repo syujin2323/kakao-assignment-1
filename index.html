@@ -3,9 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Todo App</title>
+    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    
+    <main class="app">
+    <h1 class="app-title">할 일 목록</h1>
+
+    <div class="input-area">
+      <input
+        type="text"
+        id="todo-input"
+        class="todo-input"
+        placeholder="할 일을 입력하세요"
+      />
+      <button id="add-button" class="add-button">추가</button>
+    </div>
+
+    <!-- 안내 메시지 보여줄 자리 -->
+    <p id="message" class="message"></p>
+
+    <!-- 할 일들 목록으로 들어갈 자리 -->
+    <ul id="todo-list" class="todo-list"></ul>
+  </main>
+
+  <script src="app.js"></script>
 </body>
 </html>
