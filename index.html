@@ -7,8 +7,15 @@
     <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <main class="app">
+  <main class="app">
     <h1 class="app-title">할 일 목록</h1>
+
+    <!-- 날짜 이동 영역 -->
+    <div class="date-nav">
+      <button id="prev-day" class="date-button">‹</button>
+      <span id="current-date" class="current-date"></span>
+      <button id="next-day" class="date-button">›</button>
+    </div>
 
     <div class="input-area">
       <input
@@ -20,10 +27,14 @@
       <button id="add-button" class="add-button">추가</button>
     </div>
 
-    <!-- 안내 메시지 보여줄 자리 -->
     <p id="message" class="message"></p>
 
-    <!-- 할 일들 목록으로 들어갈 자리 -->
+    <div class="filter-tabs">
+      <button class="filter-tab active" data-filter="all">전체</button>
+      <button class="filter-tab" data-filter="active">진행 중</button>
+      <button class="filter-tab" data-filter="completed">완료</button>
+    </div>
+
     <ul id="todo-list" class="todo-list"></ul>
   </main>
 
