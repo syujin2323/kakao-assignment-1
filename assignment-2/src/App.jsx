@@ -12,6 +12,7 @@ const INITIAL_TODOS = [
 
 function App() {
   const [todos, setTodos] = useState(INITIAL_TODOS);
+  const [editingId, setEditingId] = useState(null);
 
   function handleAddTodo(text) {
     const newTodo = {
@@ -36,6 +37,19 @@ function App() {
     setTodos(todos.filter((todo) => todo.id !== id));
   }
 
+  function handleStartEdit(id) {
+    setEditingId(id);
+  }
+
+  function handleSubmitEdit(id, text) {
+    setTodos(todos.map((todo) => (todo.id === id ? { ...todo, text: text } : todo)));
+    setEditingId(null);
+  }
+
+  function handleCancelEdit() {
+    setEditingId(null);
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 py-10">
       <main className="mx-auto w-full max-w-md rounded-2xl bg-white p-6 shadow-lg">
@@ -43,7 +57,15 @@ function App() {
         <DateNavigator />
         <TodoInput onAddTodo={handleAddTodo} />
         <FilterTabs />
-        <TodoList todos={todos} onToggle={handleToggle} onDelete={handleDelete} />
+        <TodoList
+          todos={todos}
+          editingId={editingId}
+          onToggle={handleToggle}
+          onStartEdit={handleStartEdit}
+          onSubmitEdit={handleSubmitEdit}
+          onCancelEdit={handleCancelEdit}
+          onDelete={handleDelete}
+        />
       </main>
     </div>
   );
