@@ -1,26 +1,30 @@
 import { useState } from "react";
+import { getToday, addDays } from "./utils/date";
 import DateNavigator from "./components/DateNavigator";
 import TodoInput from "./components/TodoInput";
 import FilterTabs from "./components/FilterTabs";
 import TodoList from "./components/TodoList";
 
+const TODAY = getToday();
+
 const INITIAL_TODOS = [
-  { id: 1, text: "리액트 공부하기", completed: false, date: "2026-06-07" },
-  { id: 2, text: "장보기", completed: true, date: "2026-06-07" },
-  { id: 3, text: "운동하기", completed: false, date: "2026-06-07" },
+  { id: 1, text: "리액트 공부하기", completed: false, date: TODAY },
+  { id: 2, text: "장보기", completed: true, date: TODAY },
+  { id: 3, text: "운동하기", completed: false, date: TODAY },
 ];
 
 function App() {
   const [todos, setTodos] = useState(INITIAL_TODOS);
   const [editingId, setEditingId] = useState(null);
   const [filter, setFilter] = useState("all");
+  const [selectedDate, setSelectedDate] = useState(TODAY);
 
   function handleAddTodo(text) {
     const newTodo = {
       id: Date.now(),
       text: text,
       completed: false,
-      date: "2026-06-07", // 임시값 — 7단계에서 selectedDate와 연결
+      date: selectedDate,
     };
     setTodos([...todos, newTodo]);
   }
@@ -55,18 +59,31 @@ function App() {
     setFilter(value);
   }
 
-  // 계산값 — state가 아니라 렌더할 때마다 todos와 filter로 계산
+  function handlePrevDay() {
+    setSelectedDate(addDays(selectedDate, -1));
+  }
+
+  function handleNextDay() {
+    setSelectedDate(addDays(selectedDate, 1));
+  }
+
+  // 계산값 — 선택된 날짜로 거른 뒤, 상태 필터를 적용
   const visibleTodos = todos.filter((todo) => {
+    if (todo.date !== selectedDate) return false;
     if (filter === "active") return !todo.completed;
     if (filter === "completed") return todo.completed;
-    return true; // "all"
+    return true;
   });
 
   return (
     <div className="min-h-screen bg-gray-50 py-10">
       <main className="mx-auto w-full max-w-md rounded-2xl bg-white p-6 shadow-lg">
         <h1 className="mb-4 text-center text-2xl font-bold text-gray-800">할 일 목록</h1>
-        <DateNavigator />
+        <DateNavigator
+          selectedDate={selectedDate}
+          onPrevDay={handlePrevDay}
+          onNextDay={handleNextDay}
+        />
         <TodoInput onAddTodo={handleAddTodo} />
         <FilterTabs filter={filter} onChangeFilter={handleChangeFilter} />
         <TodoList
