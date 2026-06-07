@@ -13,12 +13,22 @@ const INITIAL_TODOS = [
 function App() {
   const [todos, setTodos] = useState(INITIAL_TODOS);
 
+  function handleAddTodo(text) {
+    const newTodo = {
+      id: Date.now(),
+      text: text,
+      completed: false,
+      date: "2026-06-07", // 임시값 — 7단계에서 selectedDate와 연결
+    };
+    setTodos([...todos, newTodo]);
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 py-10">
       <main className="mx-auto w-full max-w-md rounded-2xl bg-white p-6 shadow-lg">
         <h1 className="mb-4 text-center text-2xl font-bold text-gray-800">할 일 목록</h1>
         <DateNavigator />
-        <TodoInput />
+        <TodoInput onAddTodo={handleAddTodo} />
         <FilterTabs />
         <TodoList todos={todos} />
       </main>
