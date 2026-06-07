@@ -23,6 +23,19 @@ function App() {
     setTodos([...todos, newTodo]);
   }
 
+  function handleToggle(id) {
+    setTodos(
+      todos.map((todo) =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      )
+    );
+  }
+
+  function handleDelete(id) {
+    if (!window.confirm("이 할 일을 삭제할까요?")) return;
+    setTodos(todos.filter((todo) => todo.id !== id));
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 py-10">
       <main className="mx-auto w-full max-w-md rounded-2xl bg-white p-6 shadow-lg">
@@ -30,7 +43,7 @@ function App() {
         <DateNavigator />
         <TodoInput onAddTodo={handleAddTodo} />
         <FilterTabs />
-        <TodoList todos={todos} />
+        <TodoList todos={todos} onToggle={handleToggle} onDelete={handleDelete} />
       </main>
     </div>
   );
