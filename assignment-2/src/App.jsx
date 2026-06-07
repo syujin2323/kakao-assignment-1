@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { getToday, addDays } from "./utils/date";
+import { loadTodos, saveTodos } from "./utils/storage";
 import DateNavigator from "./components/DateNavigator";
 import TodoInput from "./components/TodoInput";
 import FilterTabs from "./components/FilterTabs";
@@ -7,17 +8,16 @@ import TodoList from "./components/TodoList";
 
 const TODAY = getToday();
 
-const INITIAL_TODOS = [
-  { id: 1, text: "리액트 공부하기", completed: false, date: TODAY },
-  { id: 2, text: "장보기", completed: true, date: TODAY },
-  { id: 3, text: "운동하기", completed: false, date: TODAY },
-];
-
 function App() {
-  const [todos, setTodos] = useState(INITIAL_TODOS);
+  const [todos, setTodos] = useState(loadTodos);
   const [editingId, setEditingId] = useState(null);
   const [filter, setFilter] = useState("all");
   const [selectedDate, setSelectedDate] = useState(TODAY);
+
+  // todos가 바뀔 때마다 localStorage에 자동 저장
+  useEffect(() => {
+    saveTodos(todos);
+  }, [todos]);
 
   function handleAddTodo(text) {
     const newTodo = {
