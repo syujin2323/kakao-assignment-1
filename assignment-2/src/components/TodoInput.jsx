@@ -15,6 +15,7 @@ function TodoInput({ onAddTodo }) {
   }
 
   function handleKeyDown(e) {
+    if (e.nativeEvent.isComposing) return; // 한글 등 조합 중인 Enter는 무시
     if (e.key === "Enter") {
       handleSubmit();
     }
