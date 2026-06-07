@@ -1,15 +1,18 @@
+import { useState } from "react";
 import DateNavigator from "./components/DateNavigator";
 import TodoInput from "./components/TodoInput";
 import FilterTabs from "./components/FilterTabs";
 import TodoList from "./components/TodoList";
 
-const FAKE_TODOS = [
+const INITIAL_TODOS = [
   { id: 1, text: "리액트 공부하기", completed: false, date: "2026-06-07" },
   { id: 2, text: "장보기", completed: true, date: "2026-06-07" },
   { id: 3, text: "운동하기", completed: false, date: "2026-06-07" },
 ];
 
 function App() {
+  const [todos, setTodos] = useState(INITIAL_TODOS);
+
   return (
     <div className="min-h-screen bg-gray-50 py-10">
       <main className="mx-auto w-full max-w-md rounded-2xl bg-white p-6 shadow-lg">
@@ -17,7 +20,7 @@ function App() {
         <DateNavigator />
         <TodoInput />
         <FilterTabs />
-        <TodoList todos={FAKE_TODOS} />
+        <TodoList todos={todos} />
       </main>
     </div>
   );
