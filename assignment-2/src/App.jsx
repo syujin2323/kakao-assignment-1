@@ -13,6 +13,7 @@ const INITIAL_TODOS = [
 function App() {
   const [todos, setTodos] = useState(INITIAL_TODOS);
   const [editingId, setEditingId] = useState(null);
+  const [filter, setFilter] = useState("all");
 
   function handleAddTodo(text) {
     const newTodo = {
@@ -50,15 +51,26 @@ function App() {
     setEditingId(null);
   }
 
+  function handleChangeFilter(value) {
+    setFilter(value);
+  }
+
+  // 계산값 — state가 아니라 렌더할 때마다 todos와 filter로 계산
+  const visibleTodos = todos.filter((todo) => {
+    if (filter === "active") return !todo.completed;
+    if (filter === "completed") return todo.completed;
+    return true; // "all"
+  });
+
   return (
     <div className="min-h-screen bg-gray-50 py-10">
       <main className="mx-auto w-full max-w-md rounded-2xl bg-white p-6 shadow-lg">
         <h1 className="mb-4 text-center text-2xl font-bold text-gray-800">할 일 목록</h1>
         <DateNavigator />
         <TodoInput onAddTodo={handleAddTodo} />
-        <FilterTabs />
+        <FilterTabs filter={filter} onChangeFilter={handleChangeFilter} />
         <TodoList
-          todos={todos}
+          todos={visibleTodos}
           editingId={editingId}
           onToggle={handleToggle}
           onStartEdit={handleStartEdit}
