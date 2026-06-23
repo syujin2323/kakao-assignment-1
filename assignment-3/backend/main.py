@@ -9,7 +9,7 @@ Todo API (FastAPI + SQLAlchemy + SQLite)
 import os
 
 from dotenv import load_dotenv
-from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi import Depends, FastAPI, HTTPException, Query, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, ConfigDict, StringConstraints
 from sqlalchemy import Boolean, Column, Integer, String, create_engine
@@ -110,9 +110,21 @@ DbSession = Annotated[Session, Depends(get_db)]
 # 6) 엔드포인트 (CRUD)
 # ─────────────────────────────────────────────────────────────
 @app.get("/todos", response_model=list[TodoResponse])
-def list_todos(db: DbSession):
-    """전체 Todo 목록 (최신순)."""
-    return db.query(Todo).order_by(Todo.id.desc()).all()
+def list_todos(
+    db: DbSession,
+    # ?filter=all|active|completed — 상태 필터를 "서버에서" 적용한다(클라이언트 배열 필터링이 아님).
+    status_filter: str = Query("all", alias="filter"),
+):
+    """Todo 목록 (최신순). 상태 필터를 쿼리 파라미터로 받아 DB 조회 단계에서 거른다."""
+    query = db.query(Todo)
+
+    # 완료 여부로 거르기 (전체면 거르지 않음)
+    if status_filter == "active":
+        query = query.filter(Todo.completed.is_(False))
+    elif status_filter == "completed":
+        query = query.filter(Todo.completed.is_(True))
+
+    return query.order_by(Todo.id.desc()).all()
 
 
 @app.get("/todos/{todo_id}", response_model=TodoResponse)

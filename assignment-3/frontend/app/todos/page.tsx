@@ -4,13 +4,22 @@
 import Link from "next/link";
 
 import { getTodos } from "../actions";
+import type { FilterValue } from "@/lib/types";
+import FilterTabs from "./_components/FilterTabs";
 import TodoItem from "./_components/TodoItem";
 
 // 항상 최신 데이터를 보여주기 위해 정적 캐싱을 끈다(요청마다 서버 렌더).
 export const dynamic = "force-dynamic";
 
-export default async function TodosPage() {
-  const todos = await getTodos();
+export default async function TodosPage(props: {
+  searchParams: Promise<{ filter?: string }>;
+}) {
+  // URL의 ?filter= 값을 읽어 서버 조회 함수에 그대로 넘긴다(필터링은 백엔드가 수행).
+  const sp = await props.searchParams;
+  const filter: FilterValue =
+    sp.filter === "active" || sp.filter === "completed" ? sp.filter : "all";
+
+  const todos = await getTodos(filter);
 
   return (
     <>
@@ -24,8 +33,10 @@ export default async function TodosPage() {
         </Link>
       </div>
 
+      <FilterTabs />
+
       {todos.length === 0 ? (
-        <p className="py-12 text-center text-gray-400">아직 할 일이 없어요.</p>
+        <p className="py-12 text-center text-gray-400">표시할 할 일이 없어요.</p>
       ) : (
         <ul className="flex flex-col gap-2">
           {todos.map((todo) => (
