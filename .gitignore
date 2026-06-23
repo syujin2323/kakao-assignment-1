@@ -1,0 +1,25 @@
+# ── 환경변수 (비밀값) — 절대 커밋 금지 ──
+.env
+.env.local
+.env*.local
+
+# ── Node / Next.js (frontend) ──
+node_modules/
+.next/
+out/
+build/
+*.tsbuildinfo
+next-env.d.ts
+
+# ── Python / FastAPI (backend) ──
+.venv/
+__pycache__/
+*.py[cod]
+
+# ── SQLite DB 파일 ──
+*.db
+*.sqlite3
+
+# ── OS / 에디터 ──
+.DS_Store
+*.log
