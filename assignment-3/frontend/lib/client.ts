@@ -3,9 +3,9 @@
 import axios from "axios";
 import type { Todo } from "./types";
 
-// TODO(단계6): "/api"를 환경변수(NEXT_PUBLIC_API_URL)로 분리한다.
+// 브라우저에서 쓰는 값이라 NEXT_PUBLIC_ 접두사 환경변수를 사용한다(빌드 시 클라이언트 번들에 주입됨).
 const api = axios.create({
-  baseURL: "/api",
+  baseURL: process.env.NEXT_PUBLIC_API_URL ?? "/api",
 });
 
 // 새 Todo 생성
