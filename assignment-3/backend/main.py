@@ -114,8 +114,10 @@ def list_todos(
     db: DbSession,
     # ?filter=all|active|completed — 상태 필터를 "서버에서" 적용한다(클라이언트 배열 필터링이 아님).
     status_filter: str = Query("all", alias="filter"),
+    # ?search=키워드 — 내용에 키워드가 포함된 것만 (서버에서 LIKE 조회)
+    search: Optional[str] = Query(None),
 ):
-    """Todo 목록 (최신순). 상태 필터를 쿼리 파라미터로 받아 DB 조회 단계에서 거른다."""
+    """Todo 목록 (최신순). 상태 필터·검색어를 쿼리 파라미터로 받아 DB 조회 단계에서 거른다."""
     query = db.query(Todo)
 
     # 완료 여부로 거르기 (전체면 거르지 않음)
@@ -123,6 +125,10 @@ def list_todos(
         query = query.filter(Todo.completed.is_(False))
     elif status_filter == "completed":
         query = query.filter(Todo.completed.is_(True))
+
+    # 검색어가 있으면 내용에 포함된 것만 (content LIKE '%search%')
+    if search:
+        query = query.filter(Todo.content.contains(search))
 
     return query.order_by(Todo.id.desc()).all()
 
